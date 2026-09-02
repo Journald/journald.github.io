@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository | Journald</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-card: #121216;
+            --bg-card-hover: #1a1a22;
+            --red-primary: #ff2b2b;
+            --red-glow: rgba(255, 43, 43, 0.25);
+            --text-main: #e6e6e6;
+            --text-muted: #8a8a93;
+            --border-red: #3a1212;
+            --border-accent: #ff2b2b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* Navbar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-red);
+            background-color: rgba(10, 10, 12, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--red-primary);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--red-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin: 50px 0 40px 0;
+            padding: 35px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-red);
+            border-left: 4px solid var(--red-primary);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px var(--red-glow);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: var(--red-primary);
+        }
+
+        .hero p {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #fff;
+            margin: 40px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--red-primary);
+            box-shadow: 0 0 8px var(--red-primary);
+        }
+
+        /* Card Placeholder */
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .repo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-red);
+            border-radius: 8px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .repo-card h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .repo-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: rgba(255, 43, 43, 0.15);
+            color: var(--red-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid var(--border-red);
+            text-transform: uppercase;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-red);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header con menu -->
+    <header>
+        <div class="logo">Journal<span>d</span></div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="chi-sono.html">Chi Sono</a>
+            <a href="repository.html" class="active">Repository</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Lab <span>Repository</span></h1>
+            <p>In questa sezione saranno raccolti tutti i materiali utilizzati e prodotti durante le analisi dei laboratori, gli studi di caso e le attività pratiche.</p>
+            
+        </section>
+
+        <!-- Sezione Risorse -->
+        <div class="section-title">Risorse & Asset di Laboratorio</div>
+
+        <div class="repo-grid">
+            <div class="repo-card">  
+                <span class="status-badge">In aggiornamento</span>
+            </div>
+
+            <div class="repo-card">
+                <span class="status-badge">In arrivo</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Journald — Cybersecurity Research & Documentation</p>
+        </footer>
+    </div>
+
+</body>
+</html>
