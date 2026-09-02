@@ -192,7 +192,7 @@
 
                 <div class="terminal-box">
 [+] Ambiente d'analisi: Sandbox Windows 11 isolata (Flare-VM)
-[+] Strumenti usati: Wireshark, Process Monitor, x64dbg, CyberChef
+[+] Strumenti usati: Wireshark, Process Monitor, x64dbg, Shodan
 [+] Target del malware: Credenziali, Cookie di sessione, Crypto Wallet
                 </div>
 
@@ -206,7 +206,7 @@
 
                 <figure>
                     <img src="../assets/1-(1).png" alt="Schema Infezione">
-                    <figcaption>Figura 1.1 — Schema concettuale dell'attacco che ho ricostruito durante l'analisi.</figcaption>
+                    <figcaption>Figura 1.1 — Panoramica di tutti i file generati e scaricati dall'eseguibile dropper.</figcaption>
                 </figure>
 
                 <span class="section-header">2. Passo-Passo: L'Analisi del Dropper e l'Evasione</span>
@@ -238,21 +238,21 @@
                 <p>Catturando il traffico outbound con Wireshark, ho notato che il malware inviava una richiesta HTTPS verso la Blockchain di Polygon (<code>rpc-mainnet.matic.quiknode.pro</code>). Questa tecnica (<b>EtherHiding</b>) legge uno Smart Contract pubblico contenente l'indirizzo IP aggiornato del server C2, rendendo impossibile per i ricercatori abbattere la chiamata di risoluzione.</p>
 
                 <figure>
-                    <img src="../assets/etherhiding-4-proxy.png" alt="Sito Proxy Compromesso">
+                    <img src="../assets/1-(7).png" alt="Sito Proxy Compromesso">
                     <figcaption>Figura 1.4 — Il server proxy compromesso che mostra una finta pagina "Not Found" se visitato via browser.</figcaption>
                 </figure>
 
                 <p>L'IP ottenuto puntava prima a un server web aziendale violato (<code>150.136.141.142</code>) usato dagli attaccanti come Reverse Proxy per nascondere la reale destinazione. Ho analizzato i pacchetti HTTP/HTTPS inviati:</p>
 
                 <figure>
-                    <img src="../assets/etherhiding-5-traffic.png" alt="Traffico Wireshark">
+                    <img src="../assets/1-(8).png" alt="Traffico">
                     <figcaption>Figura 1.5 — Pacchetto di 68 KB contenente i database delle credenziali compresse inviato al Proxy.</figcaption>
                 </figure>
 
                 <p>Il proxy inoltrava infine i dati alla centrale operativa della <b>RCS BotNet</b> (<code>158.94.211.218</code> / <code>clip-stash.beer</code>):</p>
 
                 <figure>
-                    <img src="../assets/etherhiding-6-panel.png" alt="Pannello RCS BotNet">
+                    <img src="../assets/1-(6).png" alt="Pannello RCS BotNet">
                     <figcaption>Figura 1.6 — La schermata di login del pannello di controllo dell'attaccante che ho individuato.</figcaption>
                 </figure>
 
@@ -260,7 +260,7 @@
                 <p>Eseguendo una scansione mirata sull'IP finale del Command & Control (<code>158.94.211.218</code>), ho riscontrato le seguenti porte aperte:</p>
 
                 <figure>
-                    <img src="../assets/etherhiding-7-ports.png" alt="Scansione Porte C2">
+                    <img src="../assets/1-(2)" alt="Scansione Porte C2">
                     <figcaption>Figura 1.7 — Output delle porte aperte sul server finale dell'attaccante.</figcaption>
                 </figure>
 
