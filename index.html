@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journald | Cybersecurity & Offensive/Defensive Lab</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-card: #121216;
+            --bg-card-hover: #1a1a22;
+            --red-primary: #ff2b2b;
+            --red-glow: rgba(255, 43, 43, 0.25);
+            --text-main: #e6e6e6;
+            --text-muted: #8a8a93;
+            --border-red: #3a1212;
+            --border-accent: #ff2b2b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* Navbar in alto */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-red);
+            background-color: rgba(10, 10, 12, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--red-primary);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--red-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Sezione Benvenuto / Hero */
+        .hero {
+            margin: 50px 0 40px 0;
+            padding: 35px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-red);
+            border-left: 4px solid var(--red-primary);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px var(--red-glow);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: var(--red-primary);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+
+        .terminal-line {
+            font-family: monospace;
+            background: #000;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: var(--red-primary);
+            font-size: 0.9rem;
+            border: 1px solid #220a0a;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--red-primary);
+            box-shadow: 0 0 8px var(--red-primary);
+        }
+
+        /* Feed Articoli (Banner uno sotto l'altro) */
+        .posts-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-banner {
+            display: block;
+            text-decoration: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-red);
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-banner:hover {
+            transform: translateY(-3px);
+            border-color: var(--red-primary);
+            box-shadow: 0 4px 15px var(--red-glow);
+            background: var(--bg-card-hover);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-tag {
+            background: rgba(255, 43, 43, 0.15);
+            color: var(--red-primary);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid var(--border-red);
+        }
+
+        .post-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .post-banner h2 {
+            color: #fff;
+            font-size: 1.35rem;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .post-banner:hover h2 {
+            color: var(--red-primary);
+        }
+
+        .post-banner p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-red);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header con menu in alto a destra -->
+    <header>
+        <div class="logo">Journal<span>d</span></div>
+        <nav>
+            <a href="index.html" class="active">Home</a>
+            <a href="#">Chi Sono</a>
+            <a href="#">Repository</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Hero Banner Benvenuto -->
+        <section class="hero">
+            <h1>Benvenuto su <span>Journald</span></h1>
+            <p>Spazio personale dedicato all'analisi della cybersecurity. Qui documento laboratori pratici, dal Blue Team (Splunk e FortiGate) alle tecniche offensive e Vulnerability Assessment.</p>
+            <div class="terminal-line">$ journalctl -u cybersecurity.service --follow</div>
+        </section>
+
+        <!-- Titolo Sezione Post -->
+        <div class="section-title">Ultimi Post & Writeup</div>
+
+        <!-- Banner Articoli (Uno sotto l'altro) -->
+        <div class="posts-feed">
+            
+            <!-- Banner Post 1 -->
+            <a href="#" class="post-banner">
+                <div class="post-header">
+                    <span class="post-tag">Blue Team / SIEM</span>
+                    <span class="post-date">Settimana 1</span>
+                </div>
+                <h2>01. Ingestion dei log Linux su Splunk tramite Universal Forwarder</h2>
+                <p>Guida passo-passo per configurare l'inoltro automatico dei log di sistema (journald) su un'istanza Splunk centralizzata per la detection delle minacce.</p>
+            </a>
+
+            <!-- Banner Post 2 -->
+            <a href="#" class="post-banner">
+                <div class="post-header">
+                    <span class="post-tag">Networking / Security</span>
+                    <span class="post-date">Settimana 2</span>
+                </div>
+                <h2>02. Hardening e configurazione regole di Firewall su FortiGate</h2>
+                <p>Analisi delle policy di traffico, segmentazione delle VLAN e gestione delle VPN IPsec in un ambiente di laboratorio simulato.</p>
+            </a>
+
+            <!-- Banner Post 3 -->
+            <a href="#" class="post-banner">
+                <div class="post-header">
+                    <span class="post-tag">Offensive / Pentesting</span>
+                    <span class="post-date">Settimana 3</span>
+                </div>
+                <h2>03. Vulnerability Assessment: Scansione e Analisi con Nmap e Nessus</h2>
+                <p>Metodologia pratica per identificare servizi esposti, misurare il livello di CVSS delle vulnerabilità e proporre strategie di remediation.</p>
+            </a>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Journald — Cybersecurity Research & Documentation</p>
+        </footer>
+    </div>
+
+</body>
+</html>
