@@ -169,6 +169,37 @@
             color: var(--text-muted);
             font-size: 0.85rem;
         }
+/* Rendiamo i blocchi terminale e le immagini fluidi su mobile */
+.terminal-box {
+    word-break: break-all; /* Spezza i link/comandi lunghi se superano lo schermo */
+    white-space: pre-wrap;  /* Mantiene la formattazione senza uscire dai bordi */
+}
+
+/* Regole per schermi piccoli (Telefoni) */
+@media (max-width: 600px) {
+    header {
+        padding: 15px 5%;
+    }
+    
+    nav a {
+        margin-left: 12px;
+        font-size: 0.85rem;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    .post-title {
+        font-size: 1.7rem; /* Riduce leggermente il titolo per non spezzarlo male */
+    }
+
+    figure img {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+        
     </style>
 </head>
 <body>
