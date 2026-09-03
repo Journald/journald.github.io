@@ -6,7 +6,7 @@
     <title>Journald | Cybersecurity & Offensive/Defensive Lab</title>
   
     <style>
-:root {
+        :root {
             --bg-main: #0a0a0c;
             --bg-card: #121216;
             --bg-card-hover: #1a1a22;
@@ -33,64 +33,45 @@
         }
 
         /* Navbar in alto */
-
         header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 10%;
-    border-bottom: 1px solid var(--border-red);
-    background-color: rgba(10, 10, 12, 0.95);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(5px);
-}
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-red);
+            background-color: rgba(10, 10, 12, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
 
-.logo { 
-    font-size: 1.5rem; 
-    font-weight: 800; 
-    color: #fff; 
-    letter-spacing: 1px; 
-    text-transform: uppercase; 
-}
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: #fff; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+        }
 
-.logo span { color: var(--red-primary); }
+        .logo span { color: var(--red-primary); }
 
-nav {
-    display: flex;
-    gap: 20px;
-}
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-nav a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: color 0.3s ease;
-    white-space: nowrap;
-}
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
 
-nav a:hover, nav a.active { color: var(--red-primary); }
-
-/* REGOLA PER TELEFONI */
-@media (max-width: 600px) {
-    header { 
-        padding: 12px 10px; 
-    }
-
-    .logo { 
-        font-size: 1.15rem; 
-    }
-
-    nav { 
-        gap: 8px; 
-    }
-
-    nav a { 
-        font-size: 0.78rem; 
-    }
-}
+        nav a:hover, nav a.active { color: var(--red-primary); }
 
         /* Sezione Benvenuto / Hero */
         .hero {
@@ -228,8 +209,23 @@ nav a:hover, nav a.active { color: var(--red-primary); }
 
         /* Adattamento per Telefoni */
         @media (max-width: 600px) {
-            header { padding: 15px 5%; }
-            nav a { margin-left: 12px; font-size: 0.85rem; }
+            header { 
+                padding: 12px 10px; 
+            }
+
+            .logo { 
+                font-size: 1.15rem; 
+            }
+
+            nav { 
+                gap: 8px; 
+            }
+
+            nav a { 
+                margin-left: 0;
+                font-size: 0.78rem; 
+            }
+
             .post-banner {
                 flex-direction: column-reverse;
                 align-items: flex-start;
@@ -248,8 +244,6 @@ nav a:hover, nav a.active { color: var(--red-primary); }
             color: var(--text-muted);
             font-size: 0.85rem;
         }
-
-        
     </style>
 </head>
 <body>
@@ -278,38 +272,41 @@ nav a:hover, nav a.active { color: var(--red-primary); }
         <!-- Banner Articoli (Uno sotto l'altro) -->
         <div class="posts-feed">
             
-
             <!-- Banner Post 1 -->
-<a href="posts/1.html" class="post-banner">
-    <div class="post-content-wrapper">
-        <div class="post-header">
-            <span class="post-tag">Malware Analysis</span>
-            <span class="post-date">03/09/2026</span>
-        </div>
-        <h2>01. Inside EtherHiding: Come la Blockchain Polygon nasconde una Botnet</h2>
-        <p>Reverse engineering di un Infostealer multi-stadio: dal falso errore .NET al bypass delle difese, fino all'esfiltrazione dati via Web3 e server compromessi.</p>
-    </div>
-    <img src="assets/malware-analysis.png" alt="Malware Analysis" class="post-thumb">
-</a>
+            <a href="posts/1.html" class="post-banner">
+                <div class="post-content-wrapper">
+                    <div class="post-header">
+                        <span class="post-tag">Malware Analysis</span>
+                        <span class="post-date">03/09/2026</span>
+                    </div>
+                    <h2>01. Inside EtherHiding: Come la Blockchain Polygon nasconde una Botnet</h2>
+                    <p>Reverse engineering di un Infostealer multi-stadio: dal falso errore .NET al bypass delle difese, fino all'esfiltrazione dati via Web3 e server compromessi.</p>
+                </div>
+                <img src="assets/malware-analysis.png" alt="Malware Analysis" class="post-thumb">
+            </a>
 
             <!-- Banner Post 2 -->
             <a href="#" class="post-banner">
-                <div class="post-header">
-                    <span class="post-tag">Networking / Security</span>
-                    <span class="post-date">Settimana 2</span>
+                <div class="post-content-wrapper">
+                    <div class="post-header">
+                        <span class="post-tag">Networking / Security</span>
+                        <span class="post-date">Settimana 2</span>
+                    </div>
+                    <h2>02. Hardening e configurazione regole di Firewall su FortiGate</h2>
+                    <p>Analisi delle policy di traffico, segmentazione delle VLAN e gestione delle VPN IPsec in un ambiente di laboratorio simulato.</p>
                 </div>
-                <h2>02. Hardening e configurazione regole di Firewall su FortiGate</h2>
-                <p>Analisi delle policy di traffico, segmentazione delle VLAN e gestione delle VPN IPsec in un ambiente di laboratorio simulato.</p>
             </a>
 
             <!-- Banner Post 3 -->
             <a href="#" class="post-banner">
-                <div class="post-header">
-                    <span class="post-tag">Offensive / Pentesting</span>
-                    <span class="post-date">Settimana 3</span>
+                <div class="post-content-wrapper">
+                    <div class="post-header">
+                        <span class="post-tag">Offensive / Pentesting</span>
+                        <span class="post-date">Settimana 3</span>
+                    </div>
+                    <h2>03. Vulnerability Assessment: Scansione e Analisi con Nmap e Nessus</h2>
+                    <p>Metodologia pratica per identificare servizi esposti, misurare il livello di CVSS delle vulnerabilità e proporre strategie di remediation.</p>
                 </div>
-                <h2>03. Vulnerability Assessment: Scansione e Analisi con Nmap e Nessus</h2>
-                <p>Metodologia pratica per identificare servizi esposti, misurare il livello di CVSS delle vulnerabilità e proporre strategie di remediation.</p>
             </a>
 
         </div>
