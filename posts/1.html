@@ -17,6 +17,12 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden; /* Impedisce lo scorrimento orizzontale della pagina */
+        }
+
         body {
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace;
             background-color: var(--bg-main);
@@ -51,7 +57,12 @@
         }
         nav a:hover { color: var(--red-primary); }
 
-        .container { max-width: 850px; margin: 0 auto; padding: 40px 20px; }
+        .container { 
+            max-width: 850px; 
+            width: 100%;
+            margin: 0 auto; 
+            padding: 40px 20px; 
+        }
 
         .post-header {
             margin-bottom: 30px;
@@ -59,7 +70,7 @@
             padding-bottom: 20px;
         }
 
-        .post-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        .post-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
 
         .post-tag {
             background: rgba(255, 43, 43, 0.15);
@@ -75,7 +86,7 @@
         .post-date { color: var(--text-muted); font-size: 0.9rem; }
         .post-title { font-size: 2.2rem; color: #fff; line-height: 1.3; }
 
-        .post-content { font-size: 1.05rem; color: var(--text-main); }
+        .post-content { font-size: 1.05rem; color: var(--text-main); width: 100%; }
         .post-content p { margin-bottom: 20px; }
 
         .section-header {
@@ -110,13 +121,21 @@
             margin: 20px 0;
             overflow-x: auto;
             white-space: pre-wrap;
+            word-break: break-all;
             font-size: 0.9rem;
+            max-width: 100%;
+        }
+
+        /* Wrapper per la tabella scrollabile su mobile */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
         }
 
         .custom-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 25px 0;
             font-size: 0.95rem;
             background: var(--bg-card);
             border: 1px solid var(--border-red);
@@ -128,6 +147,7 @@
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-red);
+            word-break: break-word; /* Va a capo se il codice hash è lungo */
         }
 
         .custom-table th {
@@ -136,15 +156,22 @@
             font-weight: bold;
         }
 
-        figure { margin: 30px 0; text-align: center; }
+        figure { 
+            margin: 30px 0; 
+            text-align: center; 
+            width: 100%; 
+        }
+        
         figure img {
             width: 100%;
             max-width: 800px;
+            height: auto;
             border-radius: 6px;
             border: 1px solid var(--border-red);
             display: block;
             margin: 0 auto;
         }
+        
         figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
 
         .back-link {
@@ -163,6 +190,16 @@
             border-top: 1px solid var(--border-red);
             color: var(--text-muted);
             font-size: 0.85rem;
+        }
+
+        /* FIX MOBILE RESPONSIVE */
+        @media (max-width: 600px) {
+            header { padding: 15px 5%; }
+            nav a { margin-left: 10px; font-size: 0.85rem; }
+            .container { padding: 20px 15px; }
+            .post-title { font-size: 1.6rem; }
+            .section-header { font-size: 1.2rem; }
+            .sub-header { font-size: 1rem; }
         }
     </style>
 </head>
@@ -230,7 +267,6 @@
                 <span class="sub-header">Fase 4: Uso di Binary Legittimi (7zr.exe) e Download Payload</span>
                 <p>Invece di scaricare direttamente l'eseguibile malevolo scoprendo le carte, ho osservato che il loader forza <code>msedge.exe</code> a scaricare <b>7zr.exe</b> (l'utility ufficiale e pulita di 7-Zip). Successivamente scarica due archivi protetti da password (<code>clpupdt.7z</code> e <code>stlupdt.7z</code>) e li estrae in <code>Temp</code> usando la password <code>password2026</code> via riga di comando.</p>
 
-
                 <span class="sub-header">Fase 5: Iniezione Process Hollowing e Furto Dati</span>
                 <p>Durante l'esecuzione di <code>fault-tolerant_INSTALL.exe</code> (compilato in Delphi), ho confermato l'iniezione tramite <b>Process Hollowing</b> all'interno di un processo di sistema legittimo. L'Infostealer vero e proprio sfrutta quindi le DLL di sistema <code>crypt32.dll</code> per estrarre le chiavi master DPAPI di Windows, copiando i dati di login dei browser Chrome, Edge ed Opera.</p>
 
@@ -264,62 +300,66 @@
                     <figcaption>Figura 1.7 — Output delle porte aperte sul server finale dell'attaccante.</figcaption>
                 </figure>
 
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Porta</th>
-                            <th>Servizio</th>
-                            <th>Dettaglio Analisi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>21 / 22</td>
-                            <td>FTP / SSH</td>
-                            <td>Usate dagli operatori per caricare configurazioni e prelevare i log.</td>
-                        </tr>
-                        <tr>
-                            <td>80 / 443</td>
-                            <td>HTTP / HTTPS</td>
-                            <td>Interfaccia web del pannello RCS BotNet ed esfiltrazione dati.</td>
-                        </tr>
-                        <tr>
-                            <td>887</td>
-                            <td>Custom Service</td>
-                            <td>Canale C2 non standard per evitare l'indicizzazione su Shodan.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Porta</th>
+                                <th>Servizio</th>
+                                <th>Dettaglio Analisi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>21 / 22</td>
+                                <td>FTP / SSH</td>
+                                <td>Usate dagli operatori per caricare configurazioni e prelevare i log.</td>
+                            </tr>
+                            <tr>
+                                <td>80 / 443</td>
+                                <td>HTTP / HTTPS</td>
+                                <td>Interfaccia web del pannello RCS BotNet ed esfiltrazione dati.</td>
+                            </tr>
+                            <tr>
+                                <td>887</td>
+                                <td>Custom Service</td>
+                                <td>Canale C2 non standard per evitare l'indicizzazione su Shodan.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <span class="section-header">5. Indicators of Compromise (IoC)</span>
                 <p>Raccolgo di seguito tutti gli indicatori rilevati durante la mia analisi per consentire ai SOC Analyst di aggiornare le proprie regole di blocco:</p>
 
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Valore / Indicatore</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>SHA-256 (Injector)</td>
-                            <td><code>2a121317bb46959621a03ad1af31e13305ddba85db33760c47d4d68de410e60d</code></td>
-                        </tr>
-                        <tr>
-                            <td>SHA-256 (Stealer)</td>
-                            <td><code>9c6bab4837e0b72c0780ef199f0eaa9336dcd9b8b83ec5a5938a4b79e6ca381c</code></td>
-                        </tr>
-                        <tr>
-                            <td>IP Proxy Compromesso</td>
-                            <td><code>150.136.141.142</code></td>
-                        </tr>
-                        <tr>
-                            <td>IP C2 Finale</td>
-                            <td><code>158.94.211.218</code> (Dominio: <code>clip-stash.beer</code>)</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Valore / Indicatore</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SHA-256 (Injector)</td>
+                                <td><code>2a121317bb46959621a03ad1af31e13305ddba85db33760c47d4d68de410e60d</code></td>
+                            </tr>
+                            <tr>
+                                <td>SHA-256 (Stealer)</td>
+                                <td><code>9c6bab4837e0b72c0780ef199f0eaa9336dcd9b8b83ec5a5938a4b79e6ca381c</code></td>
+                            </tr>
+                            <tr>
+                                <td>IP Proxy Compromesso</td>
+                                <td><code>150.136.141.142</code></td>
+                            </tr>
+                            <tr>
+                                <td>IP C2 Finale</td>
+                                <td><code>158.94.211.218</code> (Dominio: <code>clip-stash.beer</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <a href="../index.html" class="back-link">&larr; Torna alla Home</a>
