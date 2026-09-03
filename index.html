@@ -33,45 +33,64 @@
         }
 
         /* Navbar in alto */
+
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 10%;
-            border-bottom: 1px solid var(--border-red);
-            background-color: rgba(10, 10, 12, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    border-bottom: 1px solid var(--border-red);
+    background-color: rgba(10, 10, 12, 0.95);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+.logo { 
+    font-size: 1.5rem; 
+    font-weight: 800; 
+    color: #fff; 
+    letter-spacing: 1px; 
+    text-transform: uppercase; 
+}
 
-        .logo span { color: var(--red-primary); }
+.logo span { color: var(--red-primary); }
 
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 25px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
+nav {
+    display: flex;
+    gap: 20px;
+}
 
-        nav a:hover, nav a.active { color: var(--red-primary); }
+nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+nav a:hover, nav a.active { color: var(--red-primary); }
+
+/* REGOLA PER TELEFONI */
+@media (max-width: 600px) {
+    header { 
+        padding: 12px 10px; 
+    }
+
+    .logo { 
+        font-size: 1.15rem; 
+    }
+
+    nav { 
+        gap: 8px; 
+    }
+
+    nav a { 
+        font-size: 0.78rem; 
+    }
+}
 
         /* Sezione Benvenuto / Hero */
         .hero {
