@@ -20,7 +20,7 @@
         html, body {
             width: 100%;
             max-width: 100%;
-            overflow-x: hidden; /* Impedisce lo scorrimento orizzontale della pagina */
+            overflow-x: hidden;
         }
 
         body {
@@ -126,15 +126,17 @@
             max-width: 100%;
         }
 
-        /* Wrapper per la tabella scrollabile su mobile */
+        /* FIX TABELLE RESPONSIVE */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             margin: 25px 0;
+            -webkit-overflow-scrolling: touch;
         }
 
         .custom-table {
             width: 100%;
+            min-width: 500px;
             border-collapse: collapse;
             font-size: 0.95rem;
             background: var(--bg-card);
@@ -144,16 +146,21 @@
         }
 
         .custom-table th, .custom-table td {
-            padding: 12px 15px;
+            padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid var(--border-red);
-            word-break: break-word; /* Va a capo se il codice hash è lungo */
         }
 
         .custom-table th {
             background-color: rgba(255, 43, 43, 0.1);
             color: var(--red-primary);
             font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .custom-table td code {
+            word-break: break-all;
+            white-space: normal;
         }
 
         figure { 
@@ -192,14 +199,27 @@
             font-size: 0.85rem;
         }
 
-        /* FIX MOBILE RESPONSIVE */
+        /* FIX MOBILE RESPONSIVE UNIFICATO CON PAGE REPOSITORY */
         @media (max-width: 600px) {
-            header { padding: 15px 5%; }
-            nav a { margin-left: 10px; font-size: 0.85rem; }
-            .container { padding: 20px 15px; }
-            .post-title { font-size: 1.6rem; }
+            header { 
+                padding: 12px 10px; 
+            }
+
+            .logo { 
+                font-size: 1.15rem; 
+            }
+
+            nav a { 
+                margin-left: 12px;
+                font-size: 0.78rem; 
+            }
+
+            .container { padding: 20px 12px; }
+            .post-title { font-size: 1.5rem; }
             .section-header { font-size: 1.2rem; }
             .sub-header { font-size: 1rem; }
+            .custom-table { font-size: 0.85rem; }
+            .custom-table th, .custom-table td { padding: 8px 10px; }
         }
     </style>
 </head>
@@ -225,7 +245,7 @@
             </div>
 
             <div class="post-content">
-                <p>In questo report documenterò l'analisi dinamica e statica che ho condotto su un campione di malware multi-stadio altamente evasivo. La minaccia si spaccia per uno strumento utile agli studenti universitari (un falso bypass per Respondus LockDown Browser), ma nasconde un Information Stealer che sfrutta la blockchain di Polygon per individuare il proprio server Command & Control.</p>
+                <p>In questo report documenterò l'analisi dinamica e statica che ho condotto su un campione di malware multi-stadio highly evasivo. La minaccia si spaccia per uno strumento utile agli studenti universitari (un falso bypass per Respondus LockDown Browser), ma nasconde un Information Stealer che sfrutta la blockchain di Polygon per individuare il proprio server Command & Control.</p>
 
                 <div class="terminal-box">
 [+] Ambiente d'analisi: Sandbox Windows 11 isolata (Flare-VM)
