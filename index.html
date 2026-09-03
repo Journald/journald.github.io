@@ -6,19 +6,42 @@
     <title>Journald | Cybersecurity & Offensive/Defensive Lab</title>
     <style>
 
-        .post-banner {
+  /* Layout della card del post */
+.post-banner {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
+    text-decoration: none;
+    background: #121216;
+    border: 1px solid #3a1212;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
+.post-banner:hover {
+    border-color: #ff2b2b;
+    transform: translateY(-2px);
+}
+
+/* Il testo occupa il 75% dello spazio (3/4) */
+.post-content-wrapper {
+    flex: 1;
+    max-width: 75%;
+}
+
+/* Gestione dell'immagine di anteprima */
 .post-thumb {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     object-fit: cover;
     border-radius: 6px;
     border: 1px solid #3a1212;
-}
+    flex-shrink: 0; /* Impedisce all'immagine di schiacciarsi */
+    
         :root {
             --bg-main: #0a0a0c;
             --bg-card: #121216;
@@ -248,9 +271,9 @@
         <!-- Banner Articoli (Uno sotto l'altro) -->
         <div class="posts-feed">
             
-          <!-- Banner Post 1 (Malware Analysis) -->
+
+            <!-- Banner Post 1 -->
 <a href="posts/1.html" class="post-banner">
-    <img src="assets/malware-analysis.png" alt="Malware Analysis" class="post-thumb">
     <div class="post-content-wrapper">
         <div class="post-header">
             <span class="post-tag">Malware Analysis</span>
@@ -259,6 +282,7 @@
         <h2>01. Inside EtherHiding: Come la Blockchain Polygon nasconde una Botnet</h2>
         <p>Reverse engineering di un Infostealer multi-stadio: dal falso errore .NET al bypass delle difese, fino all'esfiltrazione dati via Web3 e server compromessi.</p>
     </div>
+    <img src="assets/malware-analysis.png" alt="Malware Analysis" class="post-thumb">
 </a>
 
             <!-- Banner Post 2 -->
