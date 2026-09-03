@@ -33,6 +33,7 @@
         }
 
         /* Navbar in alto */
+
         header {
             display: flex;
             justify-content: space-between;
@@ -46,32 +47,32 @@
             backdrop-filter: blur(5px);
         }
 
-        .logo { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            color: #fff; 
-            letter-spacing: 1px; 
-            text-transform: uppercase; 
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .logo span { color: var(--red-primary); }
 
-        nav {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
         nav a {
             color: var(--text-muted);
             text-decoration: none;
+            margin-left: 25px;
             font-weight: 600;
             font-size: 0.95rem;
             transition: color 0.3s ease;
-            white-space: nowrap;
         }
 
         nav a:hover, nav a.active { color: var(--red-primary); }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
         /* Sezione Benvenuto / Hero */
         .hero {
