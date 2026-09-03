@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Journald | Cybersecurity & Offensive/Defensive Lab</title>
     <style>
+
+        .post-banner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.post-thumb {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #3a1212;
+}
         :root {
             --bg-main: #0a0a0c;
             --bg-card: #121216;
@@ -234,15 +248,18 @@
         <!-- Banner Articoli (Uno sotto l'altro) -->
         <div class="posts-feed">
             
-            <!-- Banner Post 1 -->
-            <a href="posts/post-prova.html" class="post-banner">
-                <div class="post-header">
-                    <span class="post-tag">Blue Team / SIEM</span>
-                    <span class="post-date">02/09/2026</span>
-                </div>
-                <h2>01. Ingestion dei log Linux su Splunk tramite Universal Forwarder</h2>
-                <p>dddddddddddddddddddd</p>
-            </a>
+          <!-- Banner Post 1 (Malware Analysis) -->
+<a href="posts/1.html" class="post-banner">
+    <img src="assets/malware-analysis.png" alt="Malware Analysis" class="post-thumb">
+    <div class="post-content-wrapper">
+        <div class="post-header">
+            <span class="post-tag">Malware Analysis</span>
+            <span class="post-date">03/09/2026</span>
+        </div>
+        <h2>01. Inside EtherHiding: Come la Blockchain Polygon nasconde una Botnet</h2>
+        <p>Reverse engineering di un Infostealer multi-stadio: dal falso errore .NET al bypass delle difese, fino all'esfiltrazione dati via Web3 e server compromessi.</p>
+    </div>
+</a>
 
             <!-- Banner Post 2 -->
             <a href="#" class="post-banner">
