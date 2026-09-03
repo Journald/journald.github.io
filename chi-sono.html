@@ -205,6 +205,22 @@
             box-shadow: 0 0 10px var(--red-glow);
         }
 
+        /* Adattamento per Telefoni */
+        @media (max-width: 600px) {
+            header { 
+                padding: 12px 10px; 
+            }
+
+            .logo { 
+                font-size: 1.15rem; 
+            }
+
+            nav a { 
+                margin-left: 12px;
+                font-size: 0.78rem; 
+            }
+        }
+
         footer {
             text-align: center;
             margin-top: 60px;
@@ -231,7 +247,7 @@
         <!-- Hero Section -->
         <section class="hero">
             <h1>Chi <span>Sono</span></h1>
-            <p>Sono un laureando in Ingegneria Informatica con una forte passione per il mondo della Cybersecurity. Attualmente svolgo un tirocinio presso un’azienda IT.</p>
+            <p>Sono un broad-minded laureando in Ingegneria Informatica con una forte passione per il mondo della Cybersecurity. Attualmente svolgo un tirocinio presso un’azienda IT.</p>
         </section>
 
         <!--  Aree di Interesse -->
@@ -244,7 +260,7 @@
                 <ul>
                     <li>SIEM & Log Management (Splunk)</li>
                     <li>IDS / IPS & Network Security</li>
-					<li>EDR (SentileOne, Trellix)</li>
+                    <li>EDR (SentileOne, Trellix)</li>
                     <li>Firewall Management (Fortinet)</li>
                     <li>Threat Intelligence & Incident Response</li>
                 </ul>
@@ -289,5 +305,7 @@
         </footer>
     </div>
 
+</body>
+</html>
 </body>
 </html>
