@@ -89,6 +89,19 @@
         .post-content { font-size: 1.05rem; color: var(--text-main); width: 100%; }
         .post-content p { margin-bottom: 20px; }
 
+        /* Stile per i link di riferimento nel testo */
+        .ref-link {
+            color: var(--red-primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--red-primary);
+            transition: all 0.2s ease;
+        }
+        .ref-link:hover {
+            color: #fff;
+            border-bottom-style: solid;
+            background: rgba(255, 43, 43, 0.1);
+        }
+
         .section-header {
             font-size: 1.4rem;
             font-weight: 700;
@@ -285,13 +298,15 @@
                 <p>Il malware esegue <code>Add-MpPreference -ExclusionPath</code> sulla cartella <code>AppData\Local\Temp</code> e crea un collegamento <code>.lnk</code> nella cartella di Esecuzione Automatica.</p>
 
                 <span class="sub-header">Fase 4: Uso di Binary Legittimi (7zr.exe) e Download Payload</span>
-                <p>Invece di scaricare direttamente l'eseguibile malevolo scoprendo le carte, ho osservato che il loader forza <code>msedge.exe</code> a scaricare <b>7zr.exe</b> (l'utility ufficiale e pulita di 7-Zip). Successivamente scarica due archivi protetti da password (<code>clpupdt.7z</code> e <code>stlupdt.7z</code>) e li estrae in <code>Temp</code> usando la password <code>password2026</code> via riga di comando.</p>
+                <p>Invece di scaricare direttamente l'eseguibile malevolo esponendosi apertamente, ho osservato che il loader forza <code>msedge.exe</code> a scaricare <b>7zr.exe</b> (l'utility ufficiale e pulita di 7-Zip). Successivamente scarica due archivi protetti da password (<code>clpupdt.7z</code> e <code>stlupdt.7z</code>) e li estrae in <code>Temp</code> usando la password <code>password2026</code> via riga di comando.</p>
 
                 <span class="sub-header">Fase 5: Iniezione Process Hollowing e Furto Dati</span>
                 <p>Durante l'esecuzione di <code>fault-tolerant_INSTALL.exe</code> (compilato in Delphi), ho confermato l'iniezione tramite <b>Process Hollowing</b> all'interno di un processo di sistema legittimo. L'Infostealer vero e proprio sfrutta quindi le DLL di sistema <code>crypt32.dll</code> per estrarre le chiavi master DPAPI di Windows, copiando i dati di login dei browser Chrome, Edge ed Opera.</p>
 
                 <span class="section-header">3. Analisi della Rete e Tecnica EtherHiding</span>
                 <p>Catturando il traffico outbound con Wireshark, ho notato che il malware inviava una richiesta HTTPS verso la Blockchain di Polygon (<code>rpc-mainnet.matic.quiknode.pro</code>). Questa tecnica (<b>EtherHiding</b>) legge uno Smart Contract pubblico contenente l'indirizzo IP aggiornato del server C2, rendendo impossibile per i ricercatori abbattere la chiamata di risoluzione.</p>
+
+                <p>La tecnica <i>EtherHiding</i> è stata documentata per la prima volta da <a href="https://cloud.google.com/blog/topics/threat-intelligence/dprk-adopts-etherhiding" target="_blank" rel="noopener noreferrer" class="ref-link">Google Threat Intelligence Group</a>, che l'ha osservata usata sia da attori finanziariamente motivati sia, più recentemente, dal gruppo nordcoreano UNC5342.</p>
 
                 <figure>
                     <img src="../assets/1-(7).png" alt="Sito Proxy Compromesso">
