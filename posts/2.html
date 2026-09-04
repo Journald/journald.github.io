@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Base: Come creare una Security Policy su FortiGate NGFW | Journald</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-card: #121216;
+            --red-brand: #ff2b2b; 
+            --blue-primary: #00d2ff; 
+            --blue-glow: rgba(0, 210, 255, 0.25);
+            --text-main: #e6e6e6;
+            --text-muted: #8a8a93;
+            --border-blue: #0f354a;
+            --border-red: #3a1212;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-blue);
+            background-color: rgba(10, 10, 12, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        /* LOGO CON DETTAGLIO ROSSO */
+        .logo { font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+        .logo span { color: var(--red-brand); }
+
+        /* NAVIGAZIONE CON HOVER ROSSO */
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover { color: var(--red-brand); }
+
+        .container { 
+            max-width: 850px; 
+            width: 100%;
+            margin: 0 auto; 
+            padding: 40px 20px; 
+        }
+
+        .post-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-blue);
+            padding-bottom: 20px;
+        }
+
+        .post-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+
+        .post-tag {
+            background: rgba(0, 210, 255, 0.15);
+            color: var(--blue-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--border-blue);
+            text-transform: uppercase;
+        }
+
+        .post-date { color: var(--text-muted); font-size: 0.9rem; }
+        .post-title { font-size: 2.2rem; color: #fff; line-height: 1.3; }
+
+        .post-content { font-size: 1.05rem; color: var(--text-main); width: 100%; }
+        .post-content p { margin-bottom: 20px; }
+
+        /* Stile per i link di riferimento nel testo */
+        .ref-link {
+            color: var(--blue-primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--blue-primary);
+            transition: all 0.2s ease;
+        }
+        .ref-link:hover {
+            color: #fff;
+            border-bottom-style: solid;
+            background: rgba(0, 210, 255, 0.1);
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 35px 0 15px 0;
+            display: block;
+            border-left: 3px solid var(--blue-primary);
+            padding-left: 10px;
+        }
+
+        .sub-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--blue-primary);
+            margin: 25px 0 10px 0;
+            display: block;
+        }
+
+        .post-content ul { list-style: none; padding-left: 0; margin-bottom: 20px; }
+        .post-content li { margin-bottom: 10px; position: relative; padding-left: 18px; }
+        .post-content li::before { content: '>'; position: absolute; left: 0; color: var(--blue-primary); font-weight: bold; }
+
+        .terminal-box {
+            background: #000;
+            border: 1px solid var(--border-blue);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: var(--blue-primary);
+            margin: 20px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.9rem;
+            max-width: 100%;
+        }
+
+        /* FIX TABELLE RESPONSIVE */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .custom-table {
+            width: 100%;
+            min-width: 500px;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-blue);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-blue);
+        }
+
+        .custom-table th {
+            background-color: rgba(0, 210, 255, 0.1);
+            color: var(--blue-primary);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .custom-table td code {
+            word-break: break-all;
+            white-space: normal;
+        }
+
+        figure { 
+            margin: 30px 0; 
+            text-align: center; 
+            width: 100%; 
+        }
+        
+        figure img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border-blue);
+            display: block;
+            margin: 0 auto;
+        }
+        
+        figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--blue-primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover { color: #fff; }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-blue);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* FIX MOBILE RESPONSIVE UNIFICATO */
+        @media (max-width: 600px) {
+            header { 
+                padding: 12px 10px; 
+            }
+
+            .logo { 
+                font-size: 1.15rem; 
+            }
+
+            nav a { 
+                margin-left: 12px;
+                font-size: 0.78rem; 
+            }
+
+            .container { padding: 20px 12px; }
+            .post-title { font-size: 1.5rem; }
+            .section-header { font-size: 1.2rem; }
+            .sub-header { font-size: 1rem; }
+            .custom-table { font-size: 0.85rem; }
+            .custom-table th, .custom-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Journal<span>d</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="../chi-sono.html">Chi Sono</a>
+            <a href="../repository.html">Repository</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="post-header">
+                <div class="post-meta">
+                    <span class="post-tag">Network Security</span>
+                    <span class="post-date">Data di pubblicazione 12 Giugno 2026</span>
+                </div>
+                <h1 class="post-title">NGFW e Come creare una Regola Firewall su FortiGate</h1>
+            </div>
+
+            <div class="post-content">
+                <p>In questo post vediamo, in modo semplice, come creare una regola firewall di base su un FortiGate NGFW (Next-Generation Firewall) di Fortinet. Non entrerò in configurazioni avanzate come SSL Inspection o IPS profile: l'obiettivo è capire il flusso minimo per permettere o bloccare traffico tra due reti tramite la GUI web.</p>
+
+                <div class="terminal-box">
+[+] Ambiente di test: FortiGate con firmware FortiOS 7.x
+[+] Accesso: GUI Web via HTTPS
+[+] Obiettivo: Creare una regola che permetta il traffico dalla LAN verso Internet (WAN)
+                </div>
+
+                <figure>
+                    <img src="../assets/fortigate-dashboard.png" alt="Dashboard principale FortiGate">
+                    <figcaption>Figura 1. Dashboard iniziale del FortiGate.</figcaption>
+                </figure>
+
+                <span class="section-header">Cos'è un NGFW e Perché si Usa</span>
+                <p>Prima di entrare nella configurazione vera e propria, vale la pena chiarire cosa cambia tra un firewall tradizionale e un NGFW (Next-Generation Firewall), visto che FortiGate appartiene a questa seconda categoria.</p>
+
+                <p>Un firewall "classico" (stateful) lavora principalmente sui livelli 3 e 4 del modello OSI: decide se far passare o bloccare un pacchetto guardando IP sorgente/destinazione, porta e protocollo. Sa dire <i>"questo traffico va dalla porta 443 di quell'IP a questo IP"</i>, ma non sa cosa c'è dentro quel traffico. Se un malware o un attaccante nascondono dati malevoli dentro una connessione HTTPS lecita verso una porta 443, un firewall tradizionale la lascia passare tranquillamente, perché per lui è solo traffico su porta 443 permesso.</p>
+
+                <p>Un NGFW aggiunge un livello di analisi molto più profondo, lavorando fino al <b>livello 7 (applicativo)</b>. In pratica un FortiGate, oltre alle regole IP/porta viste sopra, può:</p>
+
+                <ul>
+                    <li><b>Application Control:</b> Riconoscere quale applicazione o servizio specifico genera il traffico, non solo la porta usata (es. distinguere Netflix da un tunnel nascosto sulla stessa porta 443).</li>
+                    <li><b>SSL/TLS Inspection:</b> Ispezionare il contenuto del traffico anche cifrato.</li>
+                    <li><b>Web Filtering:</b> Bloccare siti e categorie web a rischio.</li>
+                    <li><b>Intrusion Prevention System (IPS/IDS):</b> Rilevare exploit e attacchi noti direttamente nei pacchetti.</li>
+                    <li><b>Antivirus / Sandboxing:</b> Analizzare i file scaricati in tempo reale.</li>
+                    <li><b>Identity-Based Policies:</b> Basare le regole anche sull'identità dell'utente (integrandosi con Active Directory / LDAP) e non solo su IP.</li>
+                </ul>
+
+                <p>Il motivo per cui oggi si usa un NGFW è semplice: la maggior parte del traffico reale è HTTPS, quindi un firewall che guarda solo IP e porta è quasi "cieco". Un NGFW permette di scrivere regole più granulari e di aggiungere protezioni direttamente sulla stessa regola di traffico.</p>
+
+                <p>Detto questo, alla base di tutto restano comunque le <b>Security Policy</b>, cioè le regole che decidono chi può parlare con chi: è da lì che si parte.</p>
+
+                <span class="section-header">Concetto Base: Cos'è una Security Policy</span>
+                <p>Su FortiGate ogni pacchetto che attraversa il firewall viene valutato da una lista di regole chiamate Security Policy. Le regole vengono lette <b>dall'alto verso il basso</b>: la prima che corrisponde (match) su interfaccia sorgente, interfaccia destinazione, indirizzo IP e servizio viene applicata e le successive vengono ignorate. Per questo l'ordine delle regole è fondamentale.</p>
+
+                <p>Gli elementi fondamentali di una regola sono:</p>
+                <ul>
+                    <li><b>Incoming Interface:</b> Da dove arriva il traffico (es. LAN).</li>
+                    <li><b>Outgoing Interface:</b> Verso dove esce il traffico (es. WAN).</li>
+                    <li><b>Source:</b> Indirizzo o subnet di origine.</li>
+                    <li><b>Destination:</b> Indirizzo o subnet di destinazione.</li>
+                    <li><b>Service:</b> Protocollo/porta (es. HTTPS, ALL, DNS).</li>
+                    <li><b>Action:</b> <code>ACCEPT</code> o <code>DENY</code>.</li>
+                    <li><b>NAT:</b> Se abilitare la traduzione indirizzi (necessario per uscire su Internet).</li>
+                </ul>
+
+                <span class="section-header">Passo 1: Creazione degli Address Object</span>
+                <p>Prima di creare la regola vera e propria, conviene definire gli oggetti di rete che verranno usati come Source e Destination, invece di scrivere IP "a mano" dentro la policy. Si trovano in <code>Policy & Objects > Addresses</code>.</p>
+                <p>Ho creato un oggetto chiamato <code>LAN_NETWORK</code> con subnet <code>192.168.1.0/24</code>, associato all'interfaccia LAN.</p>
+
+                <figure>
+                    <img src="../assets/fortigate-address.png" alt="Creazione Address Object FortiGate">
+                    <figcaption>Figura 2.1 — Creazione dell'oggetto indirizzo per la rete LAN.</figcaption>
+                </figure>
+
+                <span class="section-header">Passo 2: Creazione della Security Policy</span>
+                <p>Da menu si va in <code>Policy & Objects > Firewall Policy > Create New</code>. Qui si compila la regola con i campi descritti sopra per la nostra direttrice (LAN → Internet):</p>
+
+                <ul>
+                    <li><b>Name:</b> <code>LAN-to-WAN_Internet</code></li>
+                    <li><b>Incoming Interface:</b> <code>lan</code></li>
+                    <li><b>Outgoing Interface:</b> <code>wan1</code></li>
+                    <li><b>Source:</b> <code>LAN_NETWORK</code></li>
+                    <li><b>Destination:</b> <code>all</code></li>
+                    <li><b>Service:</b> <code>ALL</code> (o solo HTTP/HTTPS per maggiore restrittività)</li>
+                    <li><b>Action:</b> <code>ACCEPT</code></li>
+                    <li><b>NAT:</b> Abilitato (usa l'indirizzo IP della WAN uscente)</li>
+                </ul>
+
+                <figure>
+                    <img src="../assets/fortigate-policy-create.png" alt="Configurazione Firewall Policy FortiGate">
+                    <figcaption>Figura 3.1 — Configurazione della regola che permette il traffico dalla LAN verso Internet.</figcaption>
+                </figure>
+
+                <p>Un dettaglio da non sottovalutare: sotto la sezione <b>Security Profiles</b> è possibile abilitare al volo funzioni NGFW come Antivirus, Web Filter o Application Control anche su una regola semplice come questa. Per questa guida li ho lasciati disattivati per restare sul caso base.</p>
+
+                <span class="section-header">Passo 3: Salvataggio e Ordine delle Regole</span>
+                <p>Una volta salvata, la regola compare nella lista delle policy. Qui è importante controllare la posizione: se esiste già una regola più generica sopra che blocca (<code>Deny All</code>) o che matcha prima, la nostra policy non verrà mai raggiunta.</p>
+
+                <figure>
+                    <img src="../assets/fortigate-policy-list.png" alt="Lista delle Firewall Policy FortiGate">
+                    <figcaption>Figura 4.1 — La regola creata visibile nella policy list, con Action ACCEPT.</figcaption>
+                </figure>
+
+                <span class="section-header">Verifica: Il Traffico Passa Davvero?</span>
+                <p>Per confermare che la regola funzioni, ho generato traffico da un client nella LAN (una semplice navigazione web) e controllato i log in tempo reale da <code>Log & Report > Forward Traffic</code>.</p>
+
+                <figure>
+                    <img src="../assets/fortigate-logs.png" alt="Log Forward Traffic FortiGate">
+                    <figcaption>Figura 5.1 — Log di traffico che conferma il match sulla policy creata.</figcaption>
+                </figure>
+
+                <p>Se nei log compare il nome della nostra regola nella colonna "Policy", significa che il matching sta funzionando correttamente.</p>
+
+                <span class="section-header">Conclusioni</span>
+                <p>Con questi passaggi abbiamo visto il flusso minimo per gestire il traffico su un FortiGate: definire gli oggetti di rete, creare la Security Policy con i parametri corretti (interfacce, source/destination, servizio, NAT) e verificare tramite i log che la regola venga effettivamente applicata. Nei prossimi post approfondirò la parte di Security Profile (Web Filter, IPS) e la gestione della ridondanza con SD-WAN.</p>
+            </div>
+
+            <a href="../index.html" class="back-link">&larr; Torna alla Home</a>
+        </article>
+
+        <footer>
+            <p>&copy; 2026 Journald — Cybersecurity Research & Documentation</p>
+        </footer>
+    </div>
+
+</body>
+</html>
