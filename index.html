@@ -12,6 +12,11 @@
             --bg-card-hover: #1a1a22;
             --red-primary: #ff2b2b;
             --red-glow: rgba(255, 43, 43, 0.25);
+            /* Nuove variabili per il Blue Team */
+            --blue-primary: #00d2ff;
+            --blue-glow: rgba(0, 210, 255, 0.25);
+            --border-blue: #0f354a;
+            
             --text-main: #e6e6e6;
             --text-muted: #8a8a93;
             --border-red: #3a1212;
@@ -208,6 +213,30 @@
             flex-shrink: 0;
         }
 
+        /* --- STILI DEDICATI AI BANNER BLUE TEAM --- */
+        .post-banner.post-blue {
+            border-color: var(--border-blue);
+        }
+
+        .post-banner.post-blue .post-thumb {
+            border-color: var(--border-blue);
+        }
+
+        .post-banner.post-blue:hover {
+            border-color: var(--blue-primary);
+            box-shadow: 0 4px 15px var(--blue-glow);
+        }
+
+        .post-banner.post-blue:hover h2 {
+            color: var(--blue-primary);
+        }
+
+        .post-tag.tag-blue {
+            background: rgba(0, 210, 255, 0.15);
+            color: var(--blue-primary);
+            border-color: var(--border-blue);
+        }
+
         /* Adattamento per Telefoni */
         @media (max-width: 600px) {
             header { 
@@ -268,8 +297,22 @@
 
         <!-- Banner Articoli (Uno sotto l'altro) -->
         <div class="posts-feed">
+
+            <!-- Banner Post 2  -->
+            <a href="posts/2.html" class="post-banner post-blue">
+                <div class="post-content-wrapper">
+                    <div class="post-header">
+                        <span class="post-tag tag-blue">Network Security</span>
+                        <span class="post-date">11/09/2026</span>
+                    </div>
+                    <h2>02. FortiGate guida alla creazione di una Security Policy</h2>
+                    <p>Analisi architetturale e guida pratica per configurare regole firewall, comprendere la differenza tra Next-Gen e Stateful, e gestire correttamente il traffico di rete.</p>
+                </div>
+                <img src="assets/fortinet.png" alt="FortiGate Security Policy" class="post-thumb">
+            </a>
+
             
-            <!-- Banner Post 1 -->
+            <!-- Banner Post 1  -->
             <a href="posts/1.html" class="post-banner">
                 <div class="post-content-wrapper">
                     <div class="post-header">
@@ -281,6 +324,7 @@
                 </div>
                 <img src="assets/malware-analysis.png" alt="Malware Analysis" class="post-thumb">
             </a>
+
 
         </div>
 
