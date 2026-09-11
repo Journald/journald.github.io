@@ -271,7 +271,7 @@
                 </div>
 
                 <figure>
-                    <img src="../assets/fortigate-dashboard.png" alt="Dashboard principale FortiGate">
+                    <img src="../assets/f1.png" alt="Dashboard principale FortiGate">
                     <figcaption>Figura 1. Dashboard iniziale del FortiGate.</figcaption>
                 </figure>
 
@@ -314,7 +314,7 @@
                 <p>Ho creato un oggetto chiamato <code>LAN_NETWORK</code> con subnet <code>192.168.1.0/24</code>, associato all'interfaccia LAN.</p>
 
                 <figure>
-                    <img src="../assets/fortigate-address.png" alt="Creazione Address Object FortiGate">
+                    <img src="../assets/f2.png" alt="Creazione Address Object FortiGate">
                     <figcaption>Figura 2.1 — Creazione dell'oggetto indirizzo per la rete LAN.</figcaption>
                 </figure>
 
@@ -333,7 +333,7 @@
                 </ul>
 
                 <figure>
-                    <img src="../assets/fortigate-policy-create.png" alt="Configurazione Firewall Policy FortiGate">
+                    <img src="../assets/f3.png" alt="Configurazione Firewall Policy FortiGate">
                     <figcaption>Figura 3.1 — Configurazione della regola che permette il traffico dalla LAN verso Internet.</figcaption>
                 </figure>
 
@@ -343,23 +343,25 @@
                 <p>Una volta salvata, la regola compare nella lista delle policy. Qui è importante controllare la posizione: se esiste già una regola più generica sopra che blocca (<code>Deny All</code>) o che matcha prima, la nostra policy non verrà mai raggiunta.</p>
 
                 <figure>
-                    <img src="../assets/fortigate-policy-list.png" alt="Lista delle Firewall Policy FortiGate">
+                    <img src="../assets/f4.png" alt="Lista delle Firewall Policy FortiGate">
                     <figcaption>Figura 4.1 — La regola creata visibile nella policy list, con Action ACCEPT.</figcaption>
                 </figure>
 
-                <span class="section-header">Verifica: Il Traffico Passa Davvero?</span>
-                <p>Per confermare che la regola funzioni, ho generato traffico da un client nella LAN (una semplice navigazione web) e controllato i log in tempo reale da <code>Log & Report > Forward Traffic</code>.</p>
 
-                <figure>
-                    <img src="../assets/fortigate-logs.png" alt="Log Forward Traffic FortiGate">
-                    <figcaption>Figura 5.1 — Log di traffico che conferma il match sulla policy creata.</figcaption>
-                </figure>
 
-                <p>Se nei log compare il nome della nostra regola nella colonna "Policy", significa che il matching sta funzionando correttamente.</p>
 
-                <span class="section-header">Conclusioni</span>
-                <p>Con questi passaggi abbiamo visto il flusso minimo per gestire il traffico su un FortiGate: definire gli oggetti di rete, creare la Security Policy con i parametri corretti (interfacce, source/destination, servizio, NAT) e verificare tramite i log che la regola venga effettivamente applicata. Nei prossimi post approfondirò la parte di Security Profile (Web Filter, IPS) e la gestione della ridondanza con SD-WAN.</p>
-            </div>
+                <span class="section-header">Verifica e Concetti di Logging su FortiGate</span>
+<p>Una volta applicata una Security Policy, il modo corretto per verificare teoricamente e operativamente se il traffico viene elaborato dalla regola è consultare la sezione di log integrata di FortiOS, raggiungibile da <code>Log & Report > Forward Traffic</code>.</p>
+
+<p>In un contesto reale, quando un pacchetto attraversa il firewall, la colonna <b>Policy ID</b> o <b>Policy Name</b> all'interno dei log del traffico uscente permette di confermare quale regola ha effettuato il match. Se il traffico risponde alle condizioni impostate (Source, Destination, Service), il firewall registra l'evento associando l'azione definita (<code>ACCEPT</code> o <code>DENY</code>).</p>
+
+<p>In fase di analisi e troubleshooting è importante ricordare tre aspetti fondamentali relativi al logging su FortiGate:</p>
+
+<ul>
+    <li><b>Log Allowed Traffic:</b> Nella schermata della policy è possibile scegliere se registrare <i>All Sessions</i> (tutte le sessioni) o solo <i>Security Events</i>. Per il debug iniziale di una nuova regola è consigliabile impostarlo su tutte le sessioni.</li>
+    <li><b>Implicit Deny:</b> Qualsiasi traffico che non trova un match in nessuna delle regole esplicite create dall'amministratore finisce nella regola predefinita di fondo (Policy ID 0), che blocca il pacchetto e registra un evento di <code>DENY</code>.</li>
+    <li><b>Filtri di Ricerca:</b> Tramite la console dei log è possibile filtrare rapidamente per IP sorgente del client o per porta di destinazione per verificare in pochi secondi se le connessioni stanno venendo permesse o scartate.</li>
+</ul>
 
             <a href="../index.html" class="back-link">&larr; Torna alla Home</a>
         </article>
