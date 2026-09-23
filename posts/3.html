@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Come un file PDF ti ruba username e password -XSS & Form Submission- | Journald</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-card: #121216;
+            --red-primary: #ff2b2b;
+            --red-glow: rgba(255, 43, 43, 0.25);
+            --text-main: #e6e6e6;
+            --text-muted: #8a8a93;
+            --border-red: #3a1212;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-red);
+            background-color: rgba(10, 10, 12, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+        .logo span { color: var(--red-primary); }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover { color: var(--red-primary); }
+
+        .container { 
+            max-width: 850px; 
+            width: 100%;
+            margin: 0 auto; 
+            padding: 40px 20px; 
+        }
+
+        .post-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-red);
+            padding-bottom: 20px;
+        }
+
+        .post-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+
+        .post-tag {
+            background: rgba(255, 43, 43, 0.15);
+            color: var(--red-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--border-red);
+            text-transform: uppercase;
+        }
+
+        .post-date { color: var(--text-muted); font-size: 0.9rem; }
+        .post-title { font-size: 2.2rem; color: #fff; line-height: 1.3; }
+
+        .post-content { font-size: 1.05rem; color: var(--text-main); width: 100%; }
+        .post-content p { margin-bottom: 20px; }
+
+        .disclaimer-box {
+            background: rgba(255, 43, 43, 0.08);
+            border: 1px solid var(--red-primary);
+            border-left: 4px solid var(--red-primary);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .disclaimer-box strong {
+            color: var(--red-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ref-link {
+            color: var(--red-primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--red-primary);
+            transition: all 0.2s ease;
+        }
+        .ref-link:hover {
+            color: #fff;
+            border-bottom-style: solid;
+            background: rgba(255, 43, 43, 0.1);
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 35px 0 15px 0;
+            display: block;
+            border-left: 3px solid var(--red-primary);
+            padding-left: 10px;
+        }
+
+        .post-content ul { list-style: none; padding-left: 0; margin-bottom: 20px; }
+        .post-content li { margin-bottom: 10px; position: relative; padding-left: 18px; }
+        .post-content li::before { content: '>'; position: absolute; left: 0; color: var(--red-primary); font-weight: bold; }
+
+        figure { 
+            margin: 30px 0; 
+            text-align: center; 
+            width: 100%; 
+        }
+        
+        figure img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border-red);
+            display: block;
+            margin: 0 auto;
+        }
+        
+        figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--red-primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover { color: #fff; }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-red);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 12px 10px; }
+            .logo { font-size: 1.15rem; }
+            nav a { margin-left: 12px; font-size: 0.78rem; }
+            .container { padding: 20px 12px; }
+            .post-title { font-size: 1.5rem; }
+            .section-header { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Journal<span>d</span></div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="../chi-sono.html">Chi Sono</a>
+            <a href="../repository.html">Repository</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="post-header">
+                <div class="post-meta">
+                    <span class="post-tag">Client-Side Exploitation / Red Team</span>
+                    <span class="post-date">23 Settembre 2026</span>
+                </div>
+                <h1 class="post-title">Come un file PDF ti ruba username e password (XSS & Form Submission)</h1>
+            </div>
+
+            <div class="post-content">
+                
+                <div class="disclaimer-box">
+                    <strong>Disclaimer A Scopo Educativo:</strong> Questo articolo è stato redatto esclusivamente a scopo didattico e di ricerca sulla sicurezza informatica. Tutte le tecniche descritte provengono da analisi svolte in ambienti di laboratorio controllati. L'autore non si assume alcuna responsabilità per un eventuale uso improprio delle informazioni riportate.
+                </div>
+
+                <p>Quando inviamo o riceviamo un file <b>PDF</b>, tendiamo a considerarlo un semplice foglio digitale statico, inoffensivo e privo di pericoli. Non è un file eseguibile <code>.exe</code>, non installa software e sembra del tutto sicuro. Ma la realtà tecnica è ben diversa.</p>
+
+                <p>Lo standard PDF definito da Adobe è un formato immensamente complesso che supporta moduli dinamici (<b>AcroForms</b>), chiamate di rete esterne e persino un <b>motore JavaScript integrato</b> all'interno dei principali visualizzatori. Questa combinazione apre le porte a una classe di attacchi nota come <b>Portable Data exFiltration (XSS per PDF)</b>, teorizzata e documentata nella celebre ricerca di <a href="https://portswigger.net/research/portable-data-exfiltration" class="ref-link" target="_blank">PortSwigger Web Security</a>. Sfruttando le specifiche native del formato, un attaccante può iniettare script o manipolare le action di submit per trasformare un semplice lettore di documenti in uno strumento di esfiltrazione dati e furto credenziali.</p>
+
+                <p>In questo PoC pratico utilizzeremo lo strumento sviluppato dal ricercatore per armare un PDF malizioso, catturare input riservati dall'utente ed esfiltrarli in tempo reale verso un server remoto. Se vuoi consultare o scaricare il tool originale impiegato in questo test, trovi tutto sulla <a href="https://github.com/zack0x01/XSS.pdf-Credential-Harvesting-PDF" class="ref-link" target="_blank">Repository GitHub ufficiale del progetto</a>.</p>
+
+                <span class="section-header">01. Setup dell'Ambiente e Workspace Linux</span>
+                <p>Iniziamo preparando il nostro ambiente operativo su Linux. Mantenere una struttura pulita e ordinata è fondamentale quando si testano script di generazione di payload client-side.</p>
+
+                <figure>
+                    <img src="../assets/g1.png" alt="Directory di lavoro Linux">
+                    <figcaption>Figura 1 — Workspace su Linux con lo script di generazione dell'autore e i file sorgente.</figcaption>
+                </figure>
+
+                <span class="section-header">02. Cos'è un Webhook e Setup del Listener</span>
+                <p>Per raccogliere le credenziali esfiltrate dal documento senza dover tirare su un'infrastruttura di C2 complessa, utilizziamo un <b>Webhook</b>.</p>
+                
+                <p>Un Webhook è un semplice endpoint HTTP progettato per rimanere in "ascolto" e ricevere richieste uscenti in tempo reale. Quando l'azione all'interno del PDF viene innescata, i dati inseriti dalla vittima vengono impacchettati e spediti direttamente tramite una richiesta POST a questo indirizzo univoco.</p>
+
+                <figure>
+                    <img src="../assets/g2.png" alt="Interfaccia del Webhook pronto alla ricezione">
+                    <figcaption>Figura 2 — Il nostro Webhook configurato e pronto a catturare il traffico HTTP in ingresso.</figcaption>
+                </figure>
+
+                <span class="section-header">03. Generazione del Payload con lo Script dell'Autore</span>
+                <p>Invece di costruire l'albero degli oggetti PDF a mano, eseguiamo lo script Python fornito dall'autore della repository. Passiamo come argomento lo script `.py` e l'URL del nostro Webhook di destinazione: il tool provvederà a compilare le direttive JavaScript e le istruzioni <code>/SubmitForm</code> direttamente negli oggetti interni del PDF risultante.</p>
+
+                <figure>
+                    <img src="../assets/g3.png" alt="Esecuzione dello script Python per la creazione del PDF">
+                    <figcaption>Figura 3 — Comando Python per generare il PDF armato puntando all'URL del Webhook.</figcaption>
+                </figure>
+
+                <span class="section-header">04. L'Artefatto PDF: Inoffensivo all'apparenza, Letale all'esecuzione</span>
+                <p>A fine elaborazione, sul desktop compare il nostro file PDF. Agli occhi dell'utente finale sembra un normale documento di testo senza estensioni sospette o segnali d'allarme visibili, rendendolo l'esca perfetta per una campagna mirata.</p>
+
+                <figure>
+                    <img src="../assets/g4.png" alt="File PDF sul desktop">
+                    <figcaption>Figura 4 — L'artefatto PDF pronto per l'apertura sul desktop.</figcaption>
+                </figure>
+
+                <span class="section-header">05. Il Trappolamento: Pop-up Email (XSS / Interactive Prompt)</span>
+                <p>All'apertura del file, l'azione JavaScript nativa registrata nel PDF scatta automaticamente. Sullo schermo compare una prima finestra di dialogo interattiva che richiede l'inserimento dell'indirizzo email, simulando un controllo d'accesso o una verifica di sicurezza del documento.</p>
+
+                <figure>
+                    <img src="../assets/g5.png" alt="Richiesta di inserimento email via pop-up">
+                    <figcaption>Figura 5 — La prima richiesta interattiva via JavaScript prompt per l'acquisizione dell'email.</figcaption>
+                </figure>
+
+                <span class="section-header">06. Cattura della Password</span>
+                <p>Subito dopo la conferma del primo input, il motore JS del PDF mostra una seconda finestra chiedendo la password di sblocco. Entrambe le stringhe digitate dalla vittima vengono salvate temporaneamente nelle variabili di memoria dell'AcroForm.</p>
+
+                <figure>
+                    <img src="../assets/g6.png" alt="Richiesta di inserimento password via pop-up">
+                    <figcaption>Figura 6 — Il secondo prompt progettato per catturare la password in chiaro.</figcaption>
+                </figure>
+
+                <span class="section-header">07. L'Innesco: SubmitForm Action</span>
+                <p>Nell'interfaccia del documento è presente un pulsante di conferma. Facendo clic su di esso, si attiva la funzionalità standard <code>/SubmitForm</code> del formato PDF: il visualizzatore raccoglie i dati memorizzati nei prompt e li trasmette via HTTP POST direttamente all'endpoint dell'attaccante.</p>
+
+                <figure>
+                    <img src="../assets/g7.png" alt="Pulsante di invio nel documento PDF">
+                    <figcaption>Figura 7 — Invio del form e trasmissione in background delle credenziali via HTTP.</figcaption>
+                </figure>
+
+                <span class="section-header">08. Esfiltrazione Riuscita: Credenziali in Chiaro</span>
+                <p>Tornando sul pannello del Webhook, vediamo comparire istantaneamente la richiesta HTTP inviata dal PDF. Analizzando il corpo della richiesta, **email e password compaiono perfettamente in chiaro**, confermando la riuscita dell'attacco.</p>
+
+                <figure>
+                    <img src="../assets/g8.png" alt="Pannello Webhook con i dati ricevuti in chiaro">
+                    <figcaption>Figura 8 — Log del Webhook con le credenziali esfiltrate con successo.</figcaption>
+                </figure>
+
+                <span class="section-header">Social Engineering & Potenziale di Immaginazione</span>
+                <p>Nel laboratorio abbiamo utilizzato prompt essenziali e una grafica minimale per concentrarci sulla componente tecnica. Tuttavia, un attaccante reale dotato di immaginazione e buone doti di <b>Social Engineering</b> può creare scenari d'attacco ben più persuasivi e credibili.</p>
+
+                <p>Un file PDF può essere impaginato per replicare fedelmente una fattura aziendale urgente, una comunicazione della banca, un contratto da firmare o un cedolino dello stipendio. Aggiungendo un layout grafico professionale e un testo studiato ad hoc per creare urgenza, l'utente sarà portato a compilare i pop-up di verifica senza il minimo sospetto, consegnando le proprie credenziali al cybercriminale.</p>
+
+                <p>Per proteggersi da questa classe di attacchi è fondamentale adottare strategie difensive mirate:</p>
+                <ul>
+                    <li><b>Disabilitare JavaScript nei PDF:</b> Disattivare l'esecuzione automatica di script nelle impostazioni del lettore PDF aziendale (es. Adobe Acrobat Reader).</li>
+                    <li><b>Sanitizzazione degli Allegati:</b> Implementare gateway e-mail in grado di effettuare lo stripping delle azioni interattive e degli AcroForms dai documenti in ingresso.</li>
+                    <li><b>Security Awareness:</b> Educare il personale a non inserire mai credenziali aziendali all'interno di finestre di dialogo scaturite da allegati o file scaricati.</li>
+                </ul>
+            </div>
+
+            <a href="../index.html" class="back-link">&larr; Torna alla Home</a>
+        </article>
+
+        <footer>
+            <p>&copy; 2026 Journald — Cybersecurity Research & Documentation</p>
+        </footer>
+    </div>
+
+</body>
+</html>
