@@ -195,7 +195,7 @@
                     <span class="post-tag">Client-Side Exploitation / Red Team</span>
                     <span class="post-date">23 Settembre 2026</span>
                 </div>
-                <h1 class="post-title">Come un file PDF ti ruba username e password (XSS & Form Submission)</h1>
+                <h1 class="post-title">Come un file PDF ti ruba username e password -XSS & Form Submission-</h1>
             </div>
 
             <div class="post-content">
@@ -236,7 +236,7 @@
                     <figcaption>Figura 3 — Comando Python per generare il PDF armato puntando all'URL del Webhook.</figcaption>
                 </figure>
 
-                <span class="section-header">04. L'Artefatto PDF: Inoffensivo all'apparenza, Letale all'esecuzione</span>
+                <span class="section-header">04. L'Artefatto PDF</span>
                 <p>A fine elaborazione, sul desktop compare il nostro file PDF. Agli occhi dell'utente finale sembra un normale documento di testo senza estensioni sospette o segnali d'allarme visibili, rendendolo l'esca perfetta per una campagna mirata.</p>
 
                 <figure>
@@ -244,7 +244,7 @@
                     <figcaption>Figura 4 — L'artefatto PDF pronto per l'apertura sul desktop.</figcaption>
                 </figure>
 
-                <span class="section-header">05. Il Trappolamento: Pop-up Email (XSS / Interactive Prompt)</span>
+                <span class="section-header">05. Pop-up Email (XSS / Interactive Prompt)</span>
                 <p>All'apertura del file, l'azione JavaScript nativa registrata nel PDF scatta automaticamente. Sullo schermo compare una prima finestra di dialogo interattiva che richiede l'inserimento dell'indirizzo email, simulando un controllo d'accesso o una verifica di sicurezza del documento.</p>
 
                 <figure>
@@ -280,7 +280,8 @@
                 <p>Nel laboratorio abbiamo utilizzato prompt essenziali e una grafica minimale per concentrarci sulla componente tecnica. Tuttavia, un attaccante reale dotato di immaginazione e buone doti di <b>Social Engineering</b> può creare scenari d'attacco ben più persuasivi e credibili.</p>
 
                 <p>Un file PDF può essere impaginato per replicare fedelmente una fattura aziendale urgente, una comunicazione della banca, un contratto da firmare o un cedolino dello stipendio. Aggiungendo un layout grafico professionale e un testo studiato ad hoc per creare urgenza, l'utente sarà portato a compilare i pop-up di verifica senza il minimo sospetto, consegnando le proprie credenziali al cybercriminale.</p>
-
+<span class="section-header">Compatibilità dei Browser e PDF Viewer Testati</span>
+<p>Un aspetto particolarmente interessante di questa tecnica riguarda l'ampia superficie d'attacco offerta dai principali browser moderni. L'exploit e l'esecuzione delle azioni dinamiche/JavaScript risultano perfettamente efficaci su browser basati su Chromium come <b>Google Chrome</b>, <b>Chromium</b>, <b>Brave Browser</b> e <b>Microsoft Edge</b>, oltre a diverse versioni di visualizzatori PDF integrati e lettori standalone come <b>Adobe Acrobat Reader</b> (se configurati con le impostazioni predefinite). La presenza di motori di rendering PDF nativi all'interno dei browser rende l'attacco cross-platform e fruibile direttamente in-browser senza richiedere software aggiuntivi installati sulla macchina vittima.</p>
                 <p>Per proteggersi da questa classe di attacchi è fondamentale adottare strategie difensive mirate:</p>
                 <ul>
                     <li><b>Disabilitare JavaScript nei PDF:</b> Disattivare l'esecuzione automatica di script nelle impostazioni del lettore PDF aziendale (es. Adobe Acrobat Reader).</li>
