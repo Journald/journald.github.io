@@ -276,7 +276,7 @@
 
                 <div class="info-box">
                     <b>Regola sulla persistenza dei dati:</b><br>
-                    Poiché lo strato modificabile viene distrutto con l'eliminazione del container, i dati che necessitano di persistenza a lungo termine (database, file caricati dagli utenti, log) devono essere salvati su volumi esterni direttamente gestiti dal file system del server host.
+                    Poiché lo strato modificabile viene distrutto con l'eliminazione del container, I dati che devono sopravvivere alla ricreazione del container devono essere conservati tramite un meccanismo di storage persistente, come Docker volumes o bind mounts, anziché nel writable layer del container.
                 </div>
 
 
@@ -285,7 +285,7 @@
 
                 <p>In una <b>Macchina Virtuale</b>, se un software vulnerabile viene compromesso tramite un attacco remoto, l'aggressore ottiene il controllo esclusivo del sistema operativo Guest. Per poter uscire dalla VM e infettare l'host fisico o altre macchine adiacenti, deve sfruttare una vulnerabilità dell'Hypervisor (<b>VM Escape</b>). Si tratta di difetti estremamente complessi e rari nelle infrastrutture moderne.</p>
 
-                <p>In un <b>Container Docker</b>, l'isolamento è un'illusione gestita da regole software sul Kernel host. Quando un'applicazione nel container viene compromessa, qualsiasi chiamata di sistema generata dall'attaccante viene ricevuta e processata direttamente dal Kernel del server host.</p>
+                <p>In un <b>Container Docker</b>,L'isolamento di un container dipende dal Kernel host e dai meccanismi di sicurezza che ne limitano l'accesso. Quando un'applicazione nel container viene compromessa, qualsiasi chiamata di sistema generata dall'attaccante viene ricevuta e processata direttamente dal Kernel del server host.</p>
 
                 <p><b>Le principali vulnerabilità della superficie d'attacco nei container:</b></p>
                 <ul>
@@ -293,7 +293,7 @@
                     <li><b>Esecuzione con Privilegi Elevati:</b> Abilitare permessi estesi o modalità privilegiate sui container rimuove quasi tutte le barriere dei Namespaces. In questo stato, il container può interagire direttamente con i dispositivi hardware del server, caricare moduli del Kernel o rimontare il file system host con permessi di scrittura.</li>
                     <li><b>Condivisione degli Spazi di Memoria e di Rete:</b> Collegare il container alla rete dell'host o alla sua lista di processi annulla la separazione della memoria. Un utente malintenzionato può intercettare il traffico di rete degli altri servizi o ispezionare la memoria dei processi di sistema.</li>
                     <li><b>Esposizione delle Interfacce di Controllo:</b> Passare il controllo del socket di gestione di Docker all'interno di un container equivale a consegnare le chiavi di root del server. Chiunque comprometta quel container può avviare nuovi container privilegiati con accesso completo ai file dell'host.</li>
-                    <li><b>Identità degli Utenti e Corrispondenza delle UID:</b> Di default, se un processo gira come utente amministratore dentro il container, il Kernel lo riconosce con le stesse credenziali dell'amministratore supremo dell'host. In caso di evasione dal container, l'attaccante si ritroverà già in possesso dei massimi privilegi sul server.</li>
+                    <li><b>Identità degli Utenti e Corrispondenza delle UID:</b> Di default, se un processo gira come utente amministratore dentro il container, il Kernel lo riconosce con le stesse credenziali dell'amministratore dell'host. Nella configurazione standard, senza user namespace remapping, UID 0 nel container corrisponde a UID 0 sull'host. Con user namespaces o Rootless mode questa relazione può essere modificata. In caso di evasione dal container, l'attaccante si ritroverà già in possesso dei massimi privilegi sul server.</li>
                     <li><b>Rischio sulla Supply Chain e Immagini Base:</b> Utilizzare immagini di terze parti non verificate o non aggiornate introduce librerie obsolete, porte di servizio nascoste o malware direttamente all'interno dell'infrastruttura di rete.</li>
                     <li><b>Attacchi di Saturazione e Noisy Neighbors:</b> Se i limiti di consumo di memoria e CPU non sono configurati con i cgroups, un container infetto o malfunzionante può esaurire le risorse del server, causando l'arresto immediato di tutti gli altri servizi ospitati.</li>
                 </ul>
