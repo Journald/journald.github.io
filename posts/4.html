@@ -207,7 +207,7 @@
 
             <div class="post-content">
                 
-                <p><i>"Alla fine Docker è come una Macchina Virtuale, ma parte più in fretta"</i>. Questa è una delle incomprensioni più diffuse e pericolose nei reparti IT e DevOps. Se dal punto di vista dello sviluppatore l'esperienza d'uso può sembrare simile — un ambiente isolato in cui eseguire software — sul piano dell'architettura di sistema e della sicurezza difensiva le due tecnologie si basano su paradigmi opposti.</p>
+                <p><i>"Alla fine Docker è come una Macchina Virtuale, ma parte più in fretta"</i>. Questa è una delle incomprensioni più diffuse e pericolose nei reparti IT e DevOps. Se dal punto di vista dello sviluppatore l'esperienza d'uso può sembrare simile un ambiente isolato in cui eseguire software sul piano dell'architettura di sistema e della sicurezza difensiva le due tecnologie si basano su paradigmi opposti.</p>
 
                 <p>Trattare un container con la stessa mentalità con cui si gestisce una VM porta inevitabilmente a scelte infrastrutturali errate, finti sensi di sicurezza e, nel peggiore dei casi, a gravissime compromissioni dell'intero server fisico.</p>
 
@@ -231,7 +231,7 @@
                     <li><b>Control Groups (Limiti di risorse):</b> Stabiliscono ciò che un processo può consumare. Definiscono le soglie massime di CPU, RAM e risorse di I/O utilizzabili, evitando che un singolo servizio saturi l'intero server.</li>
                 </ul>
 
-                <span class="section-header">Virtualizzazione a confronto: Proxmox VE, KVM e LXC</span>
+                <span class="section-header">Virtualizzazione a confronto Proxmox VE, KVM e LXC</span>
                 <p>Per visualizzare meglio queste differenze basta osservare la coesistenza dei vari livelli di virtualizzazione all'interno di una piattaforma di gestione come <b>Proxmox VE</b>:</p>
 
                 <ul>
@@ -246,6 +246,25 @@
           
                 </figure>
 
+
+
+<span class="section-header">Il Panorama Tecnologico</span>
+<p>Nel panorama dell'infrastruttura IT convivono diverse tecnologie di virtualizzazione e containerizzazione, ciascuna progettata per specifici scenari d'uso e con livelli di isolamento ben distinti:</p>
+
+<ul>
+    <li><b>VMware ESXi / vSphere:</b> Hypervisor di Tipo 1 (bare-metal) di livello enterprise. Si installa direttamente sull'hardware fisico senza un sistema operativo sottostante. Garantisce il massimo livello di prestazioni, isolamento e gestione centralizzata per macchine virtuali critiche in ambienti aziendali.</li>
+    <li><b>Proxmox VE:</b> Piattaforma open-source basata su Debian che unisce l'hypervisor KVM per le Macchine Virtuali e i container LXC per i container di sistema. Rappresenta una delle soluzioni più flessibili e diffuse sia nei lab personali che nelle infrastrutture aziendali.</li>
+    <li><b>Oracle VirtualBox:</b> Hypervisor di Tipo 2 (hosted) che viene eseguito come un'applicazione all'interno di un sistema operativo desktop (Windows, macOS, Linux). È ideale per test locali e ambienti di sviluppo individuali, ma non adatto per ambienti di produzione.</li>
+    <li><b>Docker Engine:</b> La piattaforma di containerizzazione di applicazioni più diffusa. Concentra l'isolamento attorno a un singolo processo o servizio, riutilizzando il Kernel Linux dell'host tramite Namespaces e Control Groups per massimizzare la velocità di avvio e l'efficienza delle risorse.</li>
+    <li><b>LXC (Linux Containers):</b> A differenza di Docker, LXC crea container di sistema. Offre un ambiente molto simile a una VM classica (con il proprio init, gestione utenti e servizi di background) ma condividendo comunque il Kernel del server host.</li>
+    <li><b>Podman:</b> Un'alternativa daemonless a Docker promossa da Red Hat. Aumenta la sicurezza eseguendo i container di default senza privilegi di root (rootless) e integrando la gestione dei Pod tipica dell'ecosistema Kubernetes.</li>
+</ul>
+
+                       <figure>
+                    <img src="../assets/d-3.png" alt="Dashboard di Proxmox VE con VM KVM e Container LXC attivi">
+      
+                </figure>
+                
                 <span class="section-header">Gestione dello Storage: OverlayFS e Copy-on-Write</span>
                 <p>A differenza delle VM, che allocano dischi virtuali monolitici e rigidi, Docker gestisce i file tramite un'architettura a strati sovrapposti guidata da driver di archiviazione come Overlay2:</p>
 
@@ -278,11 +297,6 @@
                     <li><b>Rischio sulla Supply Chain e Immagini Base:</b> Utilizzare immagini di terze parti non verificate o non aggiornate introduce librerie obsolete, porte di servizio nascoste o malware direttamente all'interno dell'infrastruttura di rete.</li>
                     <li><b>Attacchi di Saturazione e Noisy Neighbors:</b> Se i limiti di consumo di memoria e CPU non sono configurati con i cgroups, un container infetto o malfunzionante può esaurire le risorse del server, causando l'arresto immediato di tutti gli altri servizi ospitati.</li>
                 </ul>
-       <figure>
-                    <img src="../assets/d-3.png" alt="Dashboard di Proxmox VE con VM KVM e Container LXC attivi">
-      
-                </figure>
-
 
               
                 <span class="section-header">Considerazioni Operative e Best Practice</span>
