@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker non è una VM perché confonderli distrugge la tua Sicurezza | Journald</title>
+    <style>
+        :root {
+            --bg-main: #060a12;
+            --bg-card: #0d1527;
+            --blue-primary: #00f0ff;
+            --blue-glow: rgba(0, 240, 255, 0.25);
+            --red-accent: #ff3333;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-blue: #1e293b;
+            --border-accent: #0f3854;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-accent);
+            background-color: rgba(6, 10, 18, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: #fff; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--red-accent);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover,
+        nav a:focus,
+        nav a:active { 
+            color: var(--red-accent); 
+        }
+
+        .container { 
+            max-width: 850px; 
+            width: 100%;
+            margin: 0 auto; 
+            padding: 40px 20px; 
+        }
+
+        .post-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-accent);
+            padding-bottom: 20px;
+        }
+
+        .post-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+
+        .post-tag {
+            background: rgba(0, 240, 255, 0.12);
+            color: var(--blue-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--border-accent);
+            text-transform: uppercase;
+        }
+
+        .post-date { color: var(--text-muted); font-size: 0.9rem; }
+        .post-title { font-size: 2.2rem; color: #fff; line-height: 1.3; }
+
+        .post-content { font-size: 1.05rem; color: var(--text-main); width: 100%; }
+        .post-content p { margin-bottom: 20px; }
+
+        .info-box {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--border-accent);
+            border-left: 4px solid var(--blue-primary);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .info-box b {
+            color: var(--blue-primary);
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 35px 0 15px 0;
+            display: block;
+            border-left: 3px solid var(--blue-primary);
+            padding-left: 10px;
+        }
+
+        .post-content ul { list-style: none; padding-left: 0; margin-bottom: 20px; }
+        .post-content li { margin-bottom: 10px; position: relative; padding-left: 18px; }
+        .post-content li::before { content: '>'; position: absolute; left: 0; color: var(--blue-primary); font-weight: bold; }
+
+        .post-content ol { padding-left: 20px; margin-bottom: 20px; color: var(--text-main); }
+        .post-content ol li { margin-bottom: 8px; }
+
+        figure { 
+            margin: 35px 0; 
+            text-align: center; 
+            width: 100%; 
+        }
+        
+        figure img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border-accent);
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--blue-primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover { color: #fff; }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-accent);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 12px 10px; }
+            .logo { font-size: 1.15rem; }
+            nav a { margin-left: 12px; font-size: 0.78rem; }
+            .container { padding: 20px 12px; }
+            .post-title { font-size: 1.5rem; }
+            .section-header { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../index.html" class="logo">Journal<span>d</span></a>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="../chi-sono.html">Chi Sono</a>
+            <a href="../repository.html">Repository</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <article>
+            <div class="post-header">
+                <div class="post-meta">
+                    <span class="post-tag">Infrastructure & Blue Team</span>
+                    <span class="post-date">30 Settembre 2026</span>
+                </div>
+                <h1 class="post-title">Docker non è una VM perché confonderli distrugge la tua Sicurezza</h1>
+            </div>
+
+            <div class="post-content">
+                
+                <p><i>"Alla fine Docker è come una Macchina Virtuale, ma parte più in fretta"</i>. Questa è una delle incomprensioni più diffuse e pericolose nei reparti IT e DevOps. Se dal punto di vista dello sviluppatore l'esperienza d'uso può sembrare simile — un ambiente isolato in cui eseguire software — sul piano dell'architettura di sistema e della sicurezza difensiva le due tecnologie si basano su paradigmi opposti.</p>
+
+                <p>Trattare un container con la stessa mentalità con cui si gestisce una VM porta inevitabilmente a scelte infrastrutturali errate, finti sensi di sicurezza e, nel peggiore dei casi, a gravissime compromissioni dell'intero server fisico.</p>
+
+                <span class="section-header">L'equivoco del Kernel Astrazione Hardware vs Isolamento Processi</span>
+                <p>La differenza fondamentale risiede nel livello di astrazione del sistema e nella gestione dell'interfaccia con le componenti fisiche del server (CPU, RAM, dischi e schede di rete).</p>
+
+                <p>Una <b>Macchina Virtuale</b> emula completamente un computer fisico. L'Hypervisor (sia esso un software di tipo bare-metal come ESXi e Proxmox KVM, o di tipo hosted) crea una barriera rigida interponendosi tra l'hardware reale e la VM. Ogni Macchina Virtuale esegue un <b>sistema operativo completo con un proprio Kernel indipendente</b> totalmente separato da quello dell'host.</p>
+
+                <p>Un <b>Container Docker</b> non virtualizza alcun hardware e non possiede un Kernel proprio. Un container è semplicemente un <b>processo applicativo del sistema operativo host</b> che viene fatto girare all'interno di un recinto logico isolato. Tutti i container presenti su un server condividono direttamente il medesimo Kernel dell'host.</p>
+
+                <figure>
+                    <img src="../assets/d-1.png" alt="Confronto architetturale tra Macchina Virtuale e Container Docker">
+              
+                </figure>
+
+                <span class="section-header">I mattoni di Linux: Namespaces e Control Groups</span>
+                <p>Senza l'emulazione di un computer, Docker si affida a due meccanismi nativi del Kernel Linux per garantire l'illusione dell'isolamento:</p>
+
+                <ul>
+                    <li><b>Namespaces (Visibilità dei confini):</b> Stabiliscono ciò che un processo può vedere. Isolano la lista dei processi di sistema, l'albero delle directory del file system, le interfacce di rete, la gestione degli utenti e il nome dell'host. Un processo nel container vede solo le risorse assegnate al proprio perimetro.</li>
+                    <li><b>Control Groups (Limiti di risorse):</b> Stabiliscono ciò che un processo può consumare. Definiscono le soglie massime di CPU, RAM e risorse di I/O utilizzabili, evitando che un singolo servizio saturi l'intero server.</li>
+                </ul>
+
+                <span class="section-header">Virtualizzazione a confronto: Proxmox VE, KVM e LXC</span>
+                <p>Per visualizzare meglio queste differenze basta osservare la coesistenza dei vari livelli di virtualizzazione all'interno di una piattaforma di gestione come <b>Proxmox VE</b>:</p>
+
+                <ul>
+                    <li><b>VM KVM (Virtualizzazione Completa):</b> Assegna risorse in modo hardware-assisted e avvia un Kernel autonomo. Consente di eseguire qualsiasi sistema operativo (Linux, Windows, BSD) con totale separazione dall'host.</li>
+                    <li><b>Container LXC (Container di Sistema):</b> Condivide il Kernel del nodo host ma avvia un ambiente operativo completo con tutti i servizi di sottofondo (gestione utenti, log di sistema, servizi di rete).</li>
+                </ul>
+
+                <p>Docker spinge questo concetto oltre focalizzandosi sul <b>Container d'Applicazione</b>: invece di emulare un intero sistema operativo di supporto, racchiude e gestisce un singolo processo applicativo destinato a nascere e morire con l'applicazione stessa.</p>
+
+                <figure>
+                    <img src="../assets/d-2.png" alt="Dashboard di Proxmox VE con VM KVM e Container LXC attivi">
+          
+                </figure>
+
+                <span class="section-header">Gestione dello Storage: OverlayFS e Copy-on-Write</span>
+                <p>A differenza delle VM, che allocano dischi virtuali monolitici e rigidi, Docker gestisce i file tramite un'architettura a strati sovrapposti guidata da driver di archiviazione come Overlay2:</p>
+
+                <ol>
+                    <li><b>Strati dell'Immagine (Sola Lettura):</b> I file di base dell'applicazione sono immutabili e condivisi. Se dieci container utilizzano la stessa immagine di base, lo spazio occupato su disco viene conteggiato una sola volta.</li>
+                    <li><b>Strato del Container (Lettura e Scrittura):</b> Un sottile livello modificabile applicato al di sopra dell'immagine per accogliere le modifiche temporanee del processo.</li>
+                    <li><b>Copy-on-Write:</b> Se un processo all'interno del container modifica un file dell'immagine, questo viene duplicato al volo nello strato modificabile prima di applicare le variazioni.</li>
+                </ol>
+
+                <div class="info-box">
+                    <b>Regola sulla persistenza dei dati:</b><br>
+                    Poiché lo strato modificabile viene distrutto con l'eliminazione del container, i dati che necessitano di persistenza a lungo termine (database, file caricati dagli utenti, log) devono essere salvati su volumi esterni direttamente gestiti dal file system del server host.
+                </div>
+
+
+                <span class="section-header">Analisi della Superficie d'Attacco: VM Escape vs Container Escape</span>
+                <p>L'aspetto più critico dell'architettura dei container riguarda la sicurezza e l'esposizione alle minacce. Poiché le due tecnologie si separano dall'hardware a livelli diversi, la superficie d'attacco risultante è radicalmente differente.</p>
+
+                <p>In una <b>Macchina Virtuale</b>, se un software vulnerabile viene compromesso tramite un attacco remoto, l'aggressore ottiene il controllo esclusivo del sistema operativo Guest. Per poter uscire dalla VM e infettare l'host fisico o altre macchine adiacenti, deve sfruttare una vulnerabilità dell'Hypervisor (<b>VM Escape</b>). Si tratta di difetti estremamente complessi e rari nelle infrastrutture moderne.</p>
+
+                <p>In un <b>Container Docker</b>, l'isolamento è un'illusione gestita da regole software sul Kernel host. Quando un'applicazione nel container viene compromessa, qualsiasi chiamata di sistema generata dall'attaccante viene ricevuta e processata direttamente dal Kernel del server host.</p>
+
+                <p><b>Le principali vulnerabilità della superficie d'attacco nei container:</b></p>
+                <ul>
+                    <li><b>Superficie del Kernel Condiviso:</b> Se il Kernel dell'host presenta un difetto di sicurezza non patchato, un exploit eseguito dentro un container vulnerabile può scalare i privilegi ed effettuare un <b>Container Escape</b> immediato, prendendo il controllo del server fisico e di tutti i container adiacenti.</li>
+                    <li><b>Esecuzione con Privilegi Elevati:</b> Abilitare permessi estesi o modalità privilegiate sui container rimuove quasi tutte le barriere dei Namespaces. In questo stato, il container può interagire direttamente con i dispositivi hardware del server, caricare moduli del Kernel o rimontare il file system host con permessi di scrittura.</li>
+                    <li><b>Condivisione degli Spazi di Memoria e di Rete:</b> Collegare il container alla rete dell'host o alla sua lista di processi annulla la separazione della memoria. Un utente malintenzionato può intercettare il traffico di rete degli altri servizi o ispezionare la memoria dei processi di sistema.</li>
+                    <li><b>Esposizione delle Interfacce di Controllo:</b> Passare il controllo del socket di gestione di Docker all'interno di un container equivale a consegnare le chiavi di root del server. Chiunque comprometta quel container può avviare nuovi container privilegiati con accesso completo ai file dell'host.</li>
+                    <li><b>Identità degli Utenti e Corrispondenza delle UID:</b> Di default, se un processo gira come utente amministratore dentro il container, il Kernel lo riconosce con le stesse credenziali dell'amministratore supremo dell'host. In caso di evasione dal container, l'attaccante si ritroverà già in possesso dei massimi privilegi sul server.</li>
+                    <li><b>Rischio sulla Supply Chain e Immagini Base:</b> Utilizzare immagini di terze parti non verificate o non aggiornate introduce librerie obsolete, porte di servizio nascoste o malware direttamente all'interno dell'infrastruttura di rete.</li>
+                    <li><b>Attacchi di Saturazione e Noisy Neighbors:</b> Se i limiti di consumo di memoria e CPU non sono configurati con i cgroups, un container infetto o malfunzionante può esaurire le risorse del server, causando l'arresto immediato di tutti gli altri servizi ospitati.</li>
+                </ul>
+       <figure>
+                    <img src="../assets/d-3" alt="Dashboard di Proxmox VE con VM KVM e Container LXC attivi">
+      
+                </figure>
+
+
+              
+                <span class="section-header">Considerazioni Operative e Best Practice</span>
+                <p>La scelta tra Macchine Virtuali e Container non deve basarsi sulla comodità di sviluppo, ma sui requisiti di isolamento del carico di lavoro:</p>
+
+                <ul>
+                    <li>Utilizza una <b>Macchina Virtuale</b> quando devi gestire ambienti con diversi livelli di fiducia (multi-tenancy), se devi eseguire sistemi con Kernel differenti (come istanze Windows o BSD) o se gestisci software legacy in cui l'isolamento hardware è un vincolo normativo o di sicurezza.</li>
+                    <li>Utilizza <b>Docker</b> per architetture a microservizi, applicazioni senza stato (stateless), ambienti di sviluppo riproducibili e servizi che necessitano di scalare rapidamente.</li>
+                </ul>
+
+                <p>Nelle infrastrutture aziendali ad alte prestazioni, la strategia difensiva standard unisce i punti di forza di entrambe le tecnologie: cluster di nodi Docker o Kubernetes distribuiti all'interno di Macchine Virtuali isolate, garantendo così sia la flessibilità dei container sia la sicurezza di un confine hardware virtualizzato.</p>
+
+            </div>
+
+            <a href="../index.html" class="back-link">&larr; Torna alla Home</a>
+        </article>
+
+        <footer>
+            <p>&copy; 2026 Journald — Cybersecurity & Infrastructure Research</p>
+        </footer>
+    </div>
+
+</body>
+</html>
